@@ -1,73 +1,142 @@
+# Slash Bot Template
 
-## Loaf Bot
+A different way to add and delete slash commands!
 
-A discord bot made to assgin tasks to discord users for a project and differnt mod tools! 
+![GitHub package.json dependency version (prod)](https://img.shields.io/github/package-json/dependency-version/GuriZenit/Slash-Bot-Template/discord.js/main?style=for-the-badge)
+[![Codacy branch grade](https://img.shields.io/codacy/grade/df82a32897b142fab1efeb68435eb69e/main?color=2a672d&style=for-the-badge)](https://www.codacy.com/gh/GuriZenit/slash-bot-template/dashboard?utm_source=github.com&utm_medium=referral&utm_content=GuriZenit/slash-bot-template&utm_campaign=Badge_Grade)
+![GitHub](https://img.shields.io/github/license/GuriZenit/Slash-Bot-Template?color=77d374&style=for-the-badge)
 
+## Example
 
+Let's use the data of `ping` command in `/src/Commands/ping.js`:
 
-## Deployment
-Requires Node 
+```javascript
+module.exports = {
+  data: {
+    name: "ping",
+    description: "ping! pong!"
+  }
+},
+...
+```
 
-To deploy this project run
+With this, we just need to use the `/add` guild command:
 
-Requires a .env  file, config.js, and a database.yml (Can be empty) 
+![](https://i.imgur.com/RHOjui9.png)
+
+To remove the command we just need to use `/delete`:
+
+![](https://i.imgur.com/R5MqXzQ.png)
+
+## Requirements
+
+-   nodejs `V16.9.x`
+-   discord.js `V14.6.x`
+
+## Usage
+
+First of all let's install the dependencies, use:
 
 ```bash
-  npm install
-  node . 
+npm install
 ```
 
+Now you need to add your `BOT_ID` and your `GUILD_ID` on the file `src/Configs/config.js`, and for your token create a `.env` file, or change `process.env.TOKEN` by your token in `config.js`
 
-## Acknowledgements
+then run:
 
- - [Discord Bot Template](https://awesomeopensource.com/project/elangosundar/)
+```bash
+node index.js
+```
 
-## Environment Variables
+You bot will start with the first command `add`.
 
-To run this project, you will need to add the following environment variables to your .env file
+Lets use the bot, You can run the command:
 
-`CLIENT_TOKEN`
+```bash
+/add name:delete type:guild
+```
 
-It also  needs a config being 
+It will add the `/delete` command like we saw on [Example](#example).
+
+### Default commands
+
+-   add
+-   delete
+-   avatar
+-   ping
+
+> these commands are already setup in `/src/Commands`, you can `add` them.
+
+When you want to add a new command don't miss the `data: ...` on `module.exports`, example:
+
 ```js
-const config = {
-    database: {
-        path: './database.yml' // The database path.
-    },
-    development: {
-        enabled: false, // If true, the bot will register all application commands to a specific guild (not globally).
-        guildId: '',
-    },
-    commands: {
-        prefix: '?', // For message commands, prefix is required. This can be changed by a database.
-        message_commands: true, // If true, the bot will allow users to use message (or prefix) commands.
-        application_commands: {
-            chat_input: true, // If true, the bot will allow users to use chat input (or slash) commands.
-            user_context: true, // If true, the bot will allow users to use user context menu commands.
-            message_context: true // If true, the bot will allow users to use message context menu commands.
-        }
-    },
-    users: {
-        ownerId: '', // The bot owner ID, which is you.
-        developers: ['', ''] // The bot developers, remember to include your account ID with the other account IDs.
-    },
-    messages: { // Messages configuration for application commands and message commands handler.
-        NOT_BOT_OWNER: 'You do not have the permission to run this command because you\'re not the owner of me!',
-        NOT_BOT_DEVELOPER: 'You do not have the permission to run this command because you\'re not a developer of me!',
-        NOT_GUILD_OWNER: 'You do not have the permission to run this command because you\re not the guild owner!',
-        CHANNEL_NOT_NSFW: 'You cannot run this command in a non-NSFW channel!',
-        MISSING_PERMISSIONS: 'You do not have the permission to run this command, missing permissions.',
-        COMPONENT_NOT_PUBLIC: 'You are not the author of this button!',
-        GUILD_COOLDOWN: 'You are currently in cooldown, you have the ability to re-use this command again in \`%cooldown%s\`.'
-    }
+module.exports = {
+  data: {
+    name: "say",
+    description: "say something",
+  },
+  ...
 }
+```
 
-module.exports = config;
+Then go to discord and use
+
+```bash
+/add name:say type:guild
+```
+
+Or if you want to add on all guilds:
+
+```bash
+/add name:say type:global
+```
+
+## Tips
+
+If you want to add all commands on startup, remove the code from `src/Structures/handler.js` and add this one:
+
+```javascript
+const { REST, Routes } = require("discord.js");
+
+module.exports = {
+  async execute(client) {
+    const { TOKEN, GUILD_ID, BOT_ID } = client.config;
+    const rest = new REST({ version: "10" }).setToken(TOKEN);
+
+    const commandArray = new Array();
+    const commands = client.commands;
+
+    commands.forEach((cmd) => {
+      commandArray.push(cmd.data);
+    });
+    // to guild
+    await rest.put(Routes.applicationGuildCommands(BOT_ID, GUILD_ID), {
+      body: commandArray,
+    });
+  },
+};
 
 ```
-## Used By
 
-This project is used by the following the game studio:
+> You still can use `add` and `delete` commands, but if you delete, they will be readded when bot restart.
 
-- Morning Dove Development
+To add globally during start change this on `// to guild` comment.
 
+
+```javascript
+// to global
+await rest.put(Routes.applicationCommands(BOT_ID), {
+      body: commandArray,
+});
+```
+
+> Caution! the `add` and `delete` commands will also be added globally!
+
+## Links
+
+[Slash Commands](https://discord.com/developers/docs/interactions/application-commands)
+
+## License
+
+[MIT](https://github.com/GuriZenit/Slash/blob/main/LICENSE)

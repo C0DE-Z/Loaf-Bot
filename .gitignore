@@ -1,9 +1,7 @@
-node_modules
-package-lock.json
-src/config.js
 .env
-database.yml
-terminal.log
-tasks.json
-users.json
-warnings.json
+package-lock.json
+node_modules
+discloud.config
+.discloudignore
+log.txt
+yarn.lock
