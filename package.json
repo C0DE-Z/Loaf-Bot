@@ -5,9 +5,9 @@
   "main": "index.js",
   "dependencies": {
     "discord.js": "^14.7.1",
-    "dotenv": "^16.0.3"
+    "dotenv": "^16.0.3",
+    "random-jokes": "^2.0.3"
   },
-  "devDependencies": {},
   "scripts": {
     "start": "node index.js",
     "test": "node start.js"
