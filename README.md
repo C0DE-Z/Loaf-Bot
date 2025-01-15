@@ -1,4 +1,7 @@
-# Loaf Bot
+# Loaf Bot v2
+
+
+### Warning this project is still WIP features will be added and removed! 
 
 A Discord bot with moderation and task management capabilities.
 
