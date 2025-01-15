@@ -2,6 +2,9 @@
 
 A Discord bot with moderation and task management capabilities.
 
+## Used in Mourning Dove Developement 
+Discord.gg/QUKCjt3d35 - Makes Roblox games coming out soon! About to hit 250 members!
+
 ## Features
 
 ### Task Management
